@@ -93,6 +93,48 @@ class TodoList {
     return returnStr;
   }
 
+  forEach(callback) {
+    this.todos.forEach(element => callback(element));
+  }
+
+  filter(callback) {
+    let selectedItems = new TodoList(this.title);
+
+    this.forEach(todo => {
+      if (callback(todo)) selectedItems.add(todo);
+    });
+
+    return selectedItems;
+  }
+
+  findByTitle(title) {
+    return this.filter(todo => todo.getTitle() === title).first();
+  }
+
+  allDone() {
+    return this.filter(todo => todo.isDone());
+  }
+
+  allNotDone() {
+    return this.filter(todo => !todo.isDone());
+  }
+
+  markDone(title) {
+    let todo = this.findByTitle(title);
+    if (todo) todo.markDone();
+  }
+
+  markAllDone() {
+    this.forEach(todo => todo.markDone());
+  }
+
+  markAllUndone() {
+    this.forEach(todo => todo.markUndone());
+  }
+
+  toArray() {
+    return this.todos.slice();
+  }
   _validateIndex(index) {
     if (!(index in this.todos)) {
       throw new ReferenceError(`invalid index: ${index}`);
